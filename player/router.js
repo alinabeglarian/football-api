@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const Player = require('./model')
 const router = new Router()
+const Team = require('../team/model')
 
 router.get('/player', function (req, res, next) {
   Player.findAll()
@@ -23,7 +24,7 @@ router.post('/player', function (req, res, next) {
 
 router.get('/player/:id', function (req, res, next) {
   const id = req.params.id
-  Player.findByPk(id)
+  Player.findByPk(id, { include: [Team] })
     .then(players => {
       res.json(players)
     })
@@ -34,7 +35,7 @@ router.get('/player/:id', function (req, res, next) {
 
 router.put('/player/:id', function (req, res, next) {
   const id = req.params.id
-  Player.findByPk(id)
+  Player.findByPk(id, { include: [Team] })
     .then(player => player.update(req.body))
     .then(player => res.json(player))
     .catch(err => {
