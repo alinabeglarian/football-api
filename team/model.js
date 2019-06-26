@@ -6,7 +6,7 @@ const Team = db.define(
   {
     name: {
       type: Sequelize.STRING,
-      field: 'team_name'
+      field: 'team_name',
     }
   },
   { tableName: 'football_teams',
