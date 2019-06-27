@@ -2,15 +2,23 @@ const { Router } = require('express')
 const Team = require('./model')
 const router = new Router()
 
-router.get('/team', function (req, res, next) {
-  Team.findAll()
-    .then(teams => {
-      res.json(teams)
+
+router.get('/team', (req, res, next) => {
+  const limit = req.query.limit || 25
+  const offset = req.query.offset || 0
+
+  Promise.all([
+    Team.count(),
+    Team.findAll({ limit, offset })
+  ])
+    .then(([total, teams]) => {
+      res.send({
+        teams, total
+      })
     })
-    .catch(err => {
-      next(err)
-    })
+    .catch(error => next(error))
 })
+
 
 router.post('/team', function (req, res, next) {
   Team
